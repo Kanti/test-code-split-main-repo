@@ -12,8 +12,14 @@ env:
 
 jobs:
   packages_split:
+    name: "${{ matrix.package }}"
     runs-on: ubuntu-latest
     environment: split
+    strategy:
+      fail-fast: false
+      matrix:
+#        package: ['grumphp-bom-task', 'grumphp-xliff-task', 'phpstan-git-files', 'rector-p']
+        package: ['test-code-split-destination']
     steps:
       - uses: actions/checkout@v4
-      - run: ./split.sh
+      - run: ./split.sh ${{ matrix.package }}

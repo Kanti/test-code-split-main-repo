@@ -10,6 +10,10 @@ commitMessage=$(git log -1 --pretty=format:"%s | %an <%ae> | %ad | https://githu
 
 mkdir -p tmp/
 
+# set author for git
+git config --global user.email "git@kanti.de"
+git config --global user.name "Automated Splitter"
+
 for package in $(ls $path) ; do
   echo -e "\033[36m[INFO] ${package} started\033[0m"
   rm -rf tmp/${package}/
@@ -26,12 +30,18 @@ for package in $(ls $path) ; do
     git -C tmp/${package}/ push --follow-tags
   fi
 
-
-  currentTag=$(git tag --points-at HEAD)
-  if [ ! -z "$currentTag" ]; then
-    GIT_TRACE=1 git -C tmp/${package}/ tag -s -e -f -a $currentTag -m "See more at https://github.com/Kanti/test-code-split-main-repo/releases/tag/${currentTag}" --no-edit
+  currentMonoRepoTag=$(git tag --points-at HEAD)
+  if [ ! -z "$currentMonoRepoTag" ]; then
+    # only if the current package commit doesn't have a tag
+    packageCommitTag=$(git -C tmp/${package}/ tag --points-at HEAD)
+    if [ ! -z "$packageCommitTag" ]; then
+      commit=$(git -C tmp/${package}/ rev-parse HEAD)
+      echo -e "\033[33m[SKIPPING] ${package}:${packageCommitTag} Tag already exists for this commit ${commit}\033[0m"
+      continue
+    fi
+    git -C tmp/${package}/ tag -s -e -f -a $currentMonoRepoTag -m "See more at https://github.com/Kanti/test-code-split-main-repo/releases/tag/${currentMonoRepoTag}" --no-edit
     git -C tmp/${package}/ push --tags
-    gh release create $currentTag --notes-from-tag --verify-tag
+    gh release create $currentMonoRepoTag --notes-from-tag --verify-tag
   fi
 
 done

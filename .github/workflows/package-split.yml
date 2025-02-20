@@ -13,7 +13,7 @@ env:
 jobs:
   packages_split:
     runs-on: ubuntu-latest
+    environment: split
     steps:
       - uses: actions/checkout@v4
-      - run: gh help
       - run: ./split.sh

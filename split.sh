@@ -39,9 +39,9 @@ for package in $(ls $path) ; do
       echo -e "\033[33m[SKIPPING] ${package}:${packageCommitTag} Tag already exists for this commit ${commit}\033[0m"
       continue
     fi
-    git -C tmp/${package}/ tag -s -e -f -a $currentMonoRepoTag -m "See more at https://github.com/Kanti/test-code-split-main-repo/releases/tag/${currentMonoRepoTag}" --no-edit
+    git -C tmp/${package}/ tag -e -f -a $currentMonoRepoTag -m "See more at https://github.com/Kanti/test-code-split-main-repo/releases/tag/${currentMonoRepoTag}" --no-edit
     git -C tmp/${package}/ push --tags
-    gh release create $currentMonoRepoTag --notes-from-tag --verify-tag
+    GH_REPO=Kanti/${package} gh release create $currentMonoRepoTag --notes-from-tag --verify-tag
   fi
 
 done

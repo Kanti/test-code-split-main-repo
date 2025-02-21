@@ -1,1 +1,2 @@
-tmp/
+.env
+# we can not add tmp/ here as that breaks the split.sh script :( (but only in the pipeline for some reason)

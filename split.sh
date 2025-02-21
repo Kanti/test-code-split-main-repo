@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefail
-# add debug info:
-set -x
+set -exuo pipefail
 
 
 # check if gh is installed
